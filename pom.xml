@@ -8,6 +8,17 @@
     <artifactId>pummelo-admin</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
+    
+    <distributionManagement>
+        <repository>
+            <id>orange-releases-repo</id>
+            <url>http://120.24.168.53:8081/nexus/content/repositories/releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>orange-snapshots-repo</id>
+            <url>http://120.24.168.53:8081/nexus/content/repositories/snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
 
     <properties>
         <file.encoding>UTF-8</file.encoding>
