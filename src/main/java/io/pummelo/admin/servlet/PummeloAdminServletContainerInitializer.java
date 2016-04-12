@@ -30,6 +30,8 @@ public class PummeloAdminServletContainerInitializer implements ServletContainer
         WebApplicationContext springContext = createSpringContext(servletContext);
         addSpringContextLoaderListener(servletContext, springContext);
         addCustomSpringWebMvcServlet(servletContext, springContext);
+        addPummeloServlet(servletContext, springContext);
+        addInternalResourceServlet(servletContext);
     }
 
     private void initLog4j() {
@@ -48,6 +50,7 @@ public class PummeloAdminServletContainerInitializer implements ServletContainer
                 new AnnotationConfigWebApplicationContext();
         springContext.setServletContext(servletContext);
         springContext.register(PummeloSpringConfig.class);
+        springContext.refresh();
         return springContext;
     }
 
@@ -59,12 +62,18 @@ public class PummeloAdminServletContainerInitializer implements ServletContainer
         ServletRegistration.Dynamic servletRegistration = servletContext.addServlet(
                 "DispatcherServlet", new DispatcherServlet(springContext));
         servletRegistration.setAsyncSupported(true);
-        servletRegistration.addMapping("/custom/*");
+        servletRegistration.addMapping("/web/*");
     }
 
     private void addPummeloServlet(ServletContext servletContext, WebApplicationContext springContext) {
         ServletRegistration.Dynamic servletRegistration = servletContext.addServlet(
                 "PummeloServlet", new PummeloAdminServlet(springContext));
-        servletRegistration.addMapping("/*");
+        servletRegistration.addMapping("/");
+        servletRegistration.addMapping("/api/*");
+    }
+
+    private void addInternalResourceServlet(ServletContext servletContext) {
+        ServletRegistration registration = servletContext.getServletRegistration("default");
+        registration.addMapping("/*");
     }
 }

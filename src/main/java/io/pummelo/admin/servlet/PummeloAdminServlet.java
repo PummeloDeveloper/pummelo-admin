@@ -1,5 +1,7 @@
 package io.pummelo.admin.servlet;
 
+import io.pummelo.admin.action.Action;
+import io.pummelo.admin.action.PummeloActionService;
 import org.springframework.context.ApplicationContext;
 
 import javax.servlet.ServletException;
@@ -13,13 +15,20 @@ import java.io.IOException;
  */
 public class PummeloAdminServlet extends HttpServlet {
 
-    private ApplicationContext springContext;
+    private final PummeloActionService actionService;
 
     public PummeloAdminServlet(ApplicationContext springContext) {
-        this.springContext = springContext;
+        actionService = springContext.getBean(PummeloActionService.class);
     }
 
     @Override
     protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String uri = request.getRequestURI();
+        Action action = actionService.get(uri);
+        if (action == null) {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND);
+            return;
+        }
+        action.service(request, response);
     }
 }

@@ -12,4 +12,12 @@ public class PummeloConfiguration {
     PummeloConfiguration(Config config) {
         this.config = config;
     }
+
+    public String getString(String path) {
+        return null;
+    }
+
+    public String getString(String path, String defaultValue) {
+        return (config.hasPath(path)) ? config.getString(path) : defaultValue;
+    }
 }
